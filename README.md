@@ -2,8 +2,8 @@
 
 Large language models (LLMs) have demonstrated strong performance
 on mathematical reasoning benchmarks such as GSM8K. However, their
-robustness to small perturbations in problem formulation remains under-
-explored. In this work, I propose a systematic evaluation framework that
+robustness to small perturbations in problem formulation remains under-explored. 
+In this work, I propose a systematic evaluation framework that
 measures the robustness of reasoning models under controlled variations
 of math word problems. Starting from 100 base problems sampled from
 the GSM8K dataset, I generate five types of semantic and structural vari-
