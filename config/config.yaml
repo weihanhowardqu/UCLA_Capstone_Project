@@ -1,0 +1,88 @@
+# Reproducibility
+seed: 263
+
+# Paths
+paths:
+  base_data: "data/base/gsm50.jsonl"
+  output_dir: "data/robust"
+  output_file: "gsm_robust_v0.1_50base.jsonl"
+  audit_dir: "data/robust/audits"
+  logs_dir: "runs/logs"
+
+week1:
+  base_size: 50
+  generate_base_in_output: true  
+  families:
+    - irrelevant_numeric_distractor
+    - symbolic_or_operand_swap
+    - scale_or_unit_change
+    - semantic_rephrasing
+    - implicit_reasoning_required
+
+family_params:
+  irrelevant_numeric_distractor:
+    distractor_count: 2           
+    placement: "append"           
+    avoid_number_collisions: true 
+    number_range:
+      min: 7
+      max: 200
+
+  symbolic_or_operand_swap:
+    rename_entities: true        
+    reorder_sentences: true       
+    max_swaps: 1                
+
+  scale_or_unit_change:
+    enabled: true
+    allowed_conversions:
+      - "minutes_to_hours"
+      - "hours_to_minutes"
+      - "cents_to_dollars"
+      - "dollars_to_cents"
+    max_conversions_per_item: 1   
+    keep_gold_answer_numeric_equal: true
+
+  semantic_rephrasing:
+    mode: "template_bank"         
+    template_bank_size: 10
+    max_sentence_edits: 2
+
+  implicit_reasoning_required:
+    mode: "conservative"          
+    allowed_inference_types:
+      - "whole_units_only"        
+      - "leftover_discarded"      
+      - "capacity_constraint"    
+    max_inference_hooks: 1
+
+# Output formatting
+output:
+  format: "jsonl"
+  id_format:
+    base_prefix: "gsm50"
+    base_id_width: 4
+    variant_id_template: "{base_id}__{family}__v{vnum}"
+
+  fields_required:
+    - base_id
+    - variant_id
+    - family
+    - source
+    - question
+    - final_answer
+
+validation:
+  strict_single_gold: true
+  require_balanced_families: true
+  expected_counts:
+    clean: 50
+    per_family: 50
+  numeric_answer_parse: true
+  deduplicate_questions: true
+
+  manual_audit:
+    enabled: true
+    sample_size_total: 30
+    per_family_min: 5
+    output_csv: "data/robust/audits/week1_manual_audit.csv"
